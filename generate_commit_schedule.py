@@ -28,5 +28,5 @@ for col, pixels in enumerate(zip(*letter_grid)):  # Transpose grid
 print("Commit Dates:")
 print("\n".join(commit_dates))
 
-with open("commit_schedule.txt", "w") as f:
+with open("dates.txt", "w") as f:
     f.write("\n".join(commit_dates))
