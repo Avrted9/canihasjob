@@ -1,0 +1,38 @@
+name: Scheduled Commits
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
+  workflow_dispatch:  # Allows manual triggering if needed
+
+jobs:
+  commit_job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Up Git
+        run: |
+          git config --global user.email "your-email@example.com"
+          git config --global user.name "GitHub Actions Bot"
+
+      - name: Check if Today Matches a Commit Date
+        id: check_date
+        run: |
+          TODAY=$(date +'%Y-%m-%d')
+          if grep -Fxq "$TODAY" dates.txt; then
+            echo "MATCH_FOUND=true" >> $GITHUB_ENV
+          else
+            echo "MATCH_FOUND=false" >> $GITHUB_ENV
+          fi
+
+      - name: Append Date to progress.txt and Commit
+        if: env.MATCH_FOUND == 'true'
+        run: |
+          TODAY=$(date +'%Y-%m-%d')
+          echo "$TODAY" >> progress.txt
+          git add progress.txt
+          git commit -m "Automated commit for $TODAY"
+          git push
