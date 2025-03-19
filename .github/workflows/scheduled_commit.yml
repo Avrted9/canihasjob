@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with: ${{ secrets.GH_PAT }}
 
       - name: Set Up Git
         run: |
@@ -35,4 +36,4 @@ jobs:
           echo "$TODAY" >> progress.txt
           git add progress.txt
           git commit -m "Automated commit for $TODAY"
-          git push
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/Avrted9/canihasjob.git
